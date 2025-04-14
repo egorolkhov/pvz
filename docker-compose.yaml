@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qazxsw2200
+      POSTGRES_DB: avito
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    environment:
+      SERVER_ADDRESS: ":8080"
+      PROMETHEUS_ADDRESS: ":9000"
+      POSTGRES_CONN: "postgres://postgres:Qazxsw2200@postgres:5432/avito?sslmode=disable"
+      JWT_SECRET: "qwerty"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+      - "9000:9000"
+  tests:
+    image: golang:1.23
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      POSTGRES_CONN: "postgres://postgres:Qazxsw2200@postgres:5432/avito?sslmode=disable"
+      JWT_SECRET: "qwerty"
+    depends_on:
+      - postgres
+    command: go test -v ./tests/integrationTests
+
+volumes:
+  postgres_data:
+
+
