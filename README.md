@@ -7,6 +7,7 @@
 ```sh
 git clone https://github.com/egorolkhov/pvz
 cd market
+```
 
 ### **Запуск с Docker**
 Для развертывания сервиса используйте команду:
