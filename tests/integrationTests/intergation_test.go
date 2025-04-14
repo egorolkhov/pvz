@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-const baseURL = "http://localhost:8080"
+const baseURL = "http://app:8080"
 
 func getToken(t *testing.T, role string) string {
 	url := baseURL + "/dummyLogin"
